@@ -64,7 +64,7 @@ def main(event:, context:)
           end
           found = true
           data = decoded_token[0]['data']
-          return response(body:data,status: 200)
+          return response(body:data.to_hash,status: 200)
         end
     end
     if found == false

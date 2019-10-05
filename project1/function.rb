@@ -63,20 +63,23 @@ def main(event:, context:)
           decoded_token = ""
           begin
             decoded_token = JWT.decode token, ENV['JWT_SECRET'], true, { algorithm: 'HS256' }
+            rescue JWT::ImmatureSignature, JWT::ExpiredSignature => e
+              return response(body:nil,status: 401)
+
             rescue JWT::DecodeError => e
-              return response(body:nil,status: 403)
+              return response(body: e,status: 403 ) 
           end
-          if (decoded_token[0]['nbf'] < Time.now.to_i) or (decoded_token[0]['exp'] > Time.now.to_i)
-            return response(body:nil,status: 401)
-          end
+          #if (decoded_token[0]['nbf'] < Time.now.to_i) or (decoded_token[0]['exp'] > Time.now.to_i)
+           # return response(body:nil,status: 401)
+          #end
 
           found = true
           data = decoded_token[0]['data']
-          return response(body:data.to_hash,status: 200)
+          return response(body:data,status: 200)
         end
     end
     if found == false
-      return response(body:nil,status: 403)
+      return response(body:nil,status: 403) 
     end
   
   end

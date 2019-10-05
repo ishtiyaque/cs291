@@ -31,14 +31,15 @@ def main(event:, context:)
     if requestBody == nil or requestBody == ''
       return response(body:nil, status: 422)
     end
+    requestJSON=''
     begin
-      JSON.parse(requestBody)
+      requestJSON=JSON.parse(requestBody)
       rescue JSON::ParserError => e
         return response(body:nil,status: 422)
     end
     
     payload = {
-    data: requestBody,
+     data: requestJSON,
     exp: Time.now.to_i + 5,
     nbf: Time.now.to_i + 2
     }

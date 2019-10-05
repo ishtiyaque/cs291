@@ -28,6 +28,9 @@ def main(event:, context:)
     end
     
     requestBody = event['body']
+    if requestBody == nil or requestBody == ''
+      return response(body:nil, status: 422)
+    end
     begin
       JSON.parse(requestBody)
       rescue JSON::ParserError => e
@@ -73,7 +76,7 @@ def main(event:, context:)
   
   end
 
-  #response(body: event, status: 200)
+  response(body: event, status: 111)
 end
 
 

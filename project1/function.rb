@@ -66,6 +66,10 @@ def main(event:, context:)
             rescue JWT::DecodeError => e
               return response(body:nil,status: 403)
           end
+          if (decoded_token[0]['nbf'] < Time.now.to_i) or (decoded_token[0]['exp'] > Time.now.to_i)
+            return response(body:nil,status: 401)
+          end
+
           found = true
           data = decoded_token[0]['data']
           return response(body:data.to_hash,status: 200)

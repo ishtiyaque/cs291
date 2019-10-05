@@ -20,7 +20,6 @@ def main(event:, context:)
   
   if verb == 'POST'
     
-    #if ((JSON.generate((event['headers']))).to_json)['content-type']) != 'application/json'
     event['headers'].each do |key, value|
       if key.downcase == 'content-type' and value != 'application/json'
         return response(body:nil,status: 415)
@@ -43,8 +42,7 @@ def main(event:, context:)
     exp: Time.now.to_i + 5,
     nbf: Time.now.to_i + 2
     }
- 
-  
+   
     token = JWT.encode( payload, ENV['JWT_SECRET'], 'HS256')
     return response(body: {
           'token' => token
@@ -65,14 +63,9 @@ def main(event:, context:)
             decoded_token = JWT.decode token, ENV['JWT_SECRET'], true, { algorithm: 'HS256' }
             rescue JWT::ImmatureSignature, JWT::ExpiredSignature => e
               return response(body:nil,status: 401)
-
             rescue JWT::DecodeError => e
               return response(body: e,status: 403 ) 
           end
-          #if (decoded_token[0]['nbf'] < Time.now.to_i) or (decoded_token[0]['exp'] > Time.now.to_i)
-           # return response(body:nil,status: 401)
-          #end
-
           found = true
           data = decoded_token[0]['data']
           return response(body:data,status: 200)
@@ -83,8 +76,7 @@ def main(event:, context:)
     end
   
   end
-
-  response(body: event, status: 111)
+  #response(body: event, status: 502)
 end
 
 
